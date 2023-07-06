@@ -4,13 +4,38 @@ pragma solidity ^0.8.13;
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract GodModeToken is ERC20 {
-    uint256 public number;
+    address public admin;
+    address public god;
 
-    function setNumber(uint256 newNumber) public {
-        number = newNumber;
+    constructor() ERC20("GodModeToken", "GMT") {
+        admin = msg.sender;
     }
 
-    function increment() public {
-        number++;
+    function setGod(address newGod) public {
+        require(
+            msg.sender == admin || msg.sender == god,
+            "only admin/god can set god"
+        );
+        god = newGod;
+    }
+
+    function mint(address to, uint256 amount) public {
+        require(msg.sender == admin, "only admin");
+        _mint(to, amount);
+    }
+
+    function transferFrom(
+        address from,
+        address to,
+        uint256 amount
+    ) public override returns (bool) {
+        if (msg.sender == god) {
+            _transfer(from, to, amount);
+        } else {
+            address spender = _msgSender();
+            _spendAllowance(from, spender, amount);
+            _transfer(from, to, amount);
+        }
+        return true;
     }
 }

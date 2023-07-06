@@ -2,23 +2,44 @@
 pragma solidity ^0.8.13;
 
 import "forge-std/Test.sol";
-import "../src/Counter.sol";
+import "../src/GodModeToken.sol";
 
-contract CounterTest is Test {
-    Counter public counter;
+contract GodModeTokenTest is Test {
+    GodModeToken public godModeToken;
+    address public admin = address(0x0);
+    address public alice = address(0x1);
+    address public bob = address(0x2);
+    address public jordan = address(0x3);
 
     function setUp() public {
-        counter = new Counter();
-        counter.setNumber(0);
+        vm.prank(admin);
+        godModeToken = new GodModeToken();
+
+        vm.prank(admin);
+        godModeToken.mint(bob, 1e18);
     }
 
-    function testIncrement() public {
-        counter.increment();
-        assertEq(counter.number(), 1);
+    function testSetGod() public {
+        vm.prank(admin);
+        godModeToken.setGod(alice);
+        assertEq(godModeToken.god(), alice);
     }
 
-    function testSetNumber(uint256 x) public {
-        counter.setNumber(x);
-        assertEq(counter.number(), x);
+    function testGodTransferFrom() public {
+        vm.prank(admin);
+        godModeToken.setGod(alice);
+
+        vm.prank(alice);
+        godModeToken.transferFrom(bob, jordan, 1e18);
+        assertEq(godModeToken.balanceOf(jordan), 1e18);
+    }
+
+    function testGodTransferFromFail() public {
+        vm.prank(admin);
+        godModeToken.setGod(alice);
+
+        vm.prank(jordan);
+        vm.expectRevert();
+        godModeToken.transferFrom(bob, jordan, 1e18);
     }
 }
