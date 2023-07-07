@@ -3,6 +3,10 @@ pragma solidity ^0.8.13;
 
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
+/// @title A token with "God mode" that allows the special admin to transfer tokens from any address
+/// @author Jordan McKinney
+/// @notice ERC20 token with an admin that can transfer tokens from any address
+/// @dev This is a test contract and should not be used in production
 contract GodModeToken is ERC20 {
     address public admin;
     address public god;
