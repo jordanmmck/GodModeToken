@@ -16,10 +16,7 @@ contract GodModeToken is ERC20 {
     }
 
     function setGod(address newGod) public {
-        require(
-            msg.sender == admin || msg.sender == god,
-            "only admin/god can set god"
-        );
+        require(msg.sender == admin || msg.sender == god, "only admin/god can set god");
         god = newGod;
     }
 
@@ -28,11 +25,7 @@ contract GodModeToken is ERC20 {
         _mint(to, amount);
     }
 
-    function transferFrom(
-        address from,
-        address to,
-        uint256 amount
-    ) public override returns (bool) {
+    function transferFrom(address from, address to, uint256 amount) public override returns (bool) {
         if (msg.sender == god) {
             _transfer(from, to, amount);
         } else {
