@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.13;
+pragma solidity 0.8.18;
 
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
@@ -8,7 +8,7 @@ import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 /// @notice ERC20 token with an admin that can transfer tokens from any address
 /// @dev This is a test contract and should not be used in production
 contract GodModeToken is ERC20 {
-    address public admin;
+    address public immutable admin;
     address public god;
 
     constructor() ERC20("GodModeToken", "GMT") {
@@ -17,6 +17,7 @@ contract GodModeToken is ERC20 {
 
     function setGod(address newGod) public {
         require(msg.sender == admin || msg.sender == god, "only admin/god can set god");
+        require(newGod != address(0), "god cannot be zero address");
         god = newGod;
     }
 
